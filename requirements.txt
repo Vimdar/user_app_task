@@ -1,0 +1,17 @@
+# API
+Django==5.1.2
+djangorestframework==3.15.2
+psycopg2==2.9.10
+python-decouple==3.8
+openai==1.52.2
+pillow==11.0.0
+
+#testing
+pytest==8.3.3
+pytest-django==4.9.0
+pylint==3.3.1
+mypy==1.13.0
+
+# debug
+django-extensions==3.2.3
+ipdb==0.13.13

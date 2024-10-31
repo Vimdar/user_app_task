@@ -1,0 +1,43 @@
+version: '3.8'
+
+networks:
+  user_api_network:
+
+x-common-env-vars: &common-vars
+  DEBUG: ${DEBUG}
+  PRODUCTION: ${PRODUCTION}
+  DBNAME: ${DBNAME}
+  DBUSER: ${DBUSER}
+  DBPASS: ${DBPASS}
+  DBHOST: ${DBHOST}
+  DBPORT: ${DBPORT}
+  DBSCHEMA: ${DBSCHEMA}
+  DBENGINE: ${DBENGINE}
+
+
+services:
+  # postgres service
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/DockerfilePostgres
+    container_name: user_api_pgdb
+    volumes:
+      - ./tmp/postgres_data:/var/lib/postgresql/data/
+    ports:
+      # outside_port:inside_port
+      - ${DBPORT_OUT}:${DBPORT_IN}
+    environment:
+      <<: *common-vars
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    restart: unless-stopped
+    networks:
+      - user_api_network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DBUSER}", "-d", "${DBNAME}"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+  # TODO: add API service
